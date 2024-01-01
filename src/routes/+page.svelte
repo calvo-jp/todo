@@ -31,7 +31,7 @@
 			}}
 		>
 			<input
-				class="block h-12 w-full rounded border border-neutral-200 px-4 outline-none placeholder:text-neutral-400"
+				class="block h-12 w-full rounded border border-neutral-300 px-4 outline-none placeholder:text-neutral-400"
 				placeholder="Todo"
 				bind:value={title}
 			/>
@@ -48,7 +48,7 @@
 </main>
 
 {#snippet item(todo: ITodo)}
-	<div class="flex items-center gap-2 rounded border border-neutral-200 p-5">
+	<div class="flex items-center gap-2 rounded border border-neutral-300 p-5">
 		<div>
 			{#if todo.complete}
 				<CheckCircleIcon class="text-green-500" />
