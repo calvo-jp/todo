@@ -1,7 +1,7 @@
 import {prisma} from '$lib/prisma';
 import type {Prisma} from '@prisma/client';
 import {redirect} from '@sveltejs/kit';
-import {object, optional, parse, string, toTrimmed, transform} from 'valibot';
+import {nullable, object, parse, string, toTrimmed, transform} from 'valibot';
 import type {PageServerLoad} from './$types';
 
 export const load: PageServerLoad = async (event) => {
@@ -9,7 +9,8 @@ export const load: PageServerLoad = async (event) => {
 
 	const {page, size, search} = parse(schema, {
 		page: event.url.searchParams.get('page'),
-		size: event.url.searchParams.get('page'),
+		size: event.url.searchParams.get('size'),
+		search: event.url.searchParams.get('search'),
 	});
 
 	if (!session) throw redirect(303, '/login');
@@ -43,15 +44,15 @@ export const load: PageServerLoad = async (event) => {
 };
 
 const schema = object({
-	page: transform(optional(string()), (v) => {
+	page: transform(nullable(string()), (v) => {
 		const n = v ? parseInt(v) : 1;
 
 		return Number.isNaN(n) ? 1 : n < 1 ? 1 : n;
 	}),
-	size: transform(optional(string()), (v) => {
+	size: transform(nullable(string()), (v) => {
 		const n = v ? parseInt(v) : 10;
 
 		return Number.isNaN(n) ? 10 : n < 10 ? 10 : n;
 	}),
-	search: optional(string([toTrimmed()])),
+	search: nullable(string([toTrimmed()])),
 });

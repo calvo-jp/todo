@@ -25,6 +25,7 @@
 
 		<div class="relative">
 			<input
+				type="search"
 				name="search"
 				value={data.search}
 				placeholder="Search"
