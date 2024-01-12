@@ -12,9 +12,7 @@
 <main class="mx-auto max-w-screen-md p-4 lg:p-16">
 	<div class="flex items-center gap-2">
 		<h2 class="text-2xl font-bold">Todo</h2>
-		<div
-			class="rounded bg-neutral-200 px-1.5 py-1 font-mono text-xs leading-none"
-		>
+		<div class="rounded bg-gray-200 px-1.5 py-1 font-mono text-xs leading-none">
 			{data.total}
 		</div>
 	</div>
@@ -29,7 +27,7 @@
 				name="search"
 				value={data.search}
 				placeholder="Search"
-				class="block h-12 w-full rounded border border-neutral-300 pl-10 pr-4 outline-none placeholder:text-neutral-400"
+				class="block h-12 w-full rounded border border-gray-200 pl-10 pr-4 outline-none placeholder:text-gray-400"
 			/>
 
 			<SearchIcon class="absolute left-2 top-1/2 h-5 w-5 -translate-y-1/2" />
@@ -46,13 +44,13 @@
 </main>
 
 {#snippet item(todo: Todo)}
-	<div class="flex items-center gap-2 rounded border border-neutral-300 p-5">
+	<div class="flex items-center gap-2 rounded border border-gray-200 p-5">
 		<p class="grow">
 			{todo.title}
 		</p>
 
 		<button type="button" class="group flex" onclick={() => {}}>
-			<XIcon class="h-5 w-5 text-neutral-300 group-hover:text-neutral-500" />
+			<XIcon class="h-5 w-5 text-gray-200 group-hover:text-gray-500" />
 			<span class="sr-only">Delete</span>
 		</button>
 	</div>

@@ -1,4 +1,4 @@
-import {prisma} from '$lib/prisma';
+import {prisma} from '$lib/server/prisma';
 import {PrismaAdapter} from '@auth/prisma-adapter';
 import {SvelteKitAuth} from '@auth/sveltekit';
 import type {Handle} from '@sveltejs/kit';
