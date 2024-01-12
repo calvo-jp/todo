@@ -1,10 +1,10 @@
 <script lang="ts">
 	import CheckCircleIcon from '$lib/check-circle-icon.svelte';
-	import {TodoRepository, type ITodo} from '$lib/todo-repository.svelte';
 	import XIcon from '$lib/x-icon.svelte';
+	import type {Todo} from '@prisma/client';
 
-	let repo = new TodoRepository();
-	let title = $state('');
+	let {data} = $props();
+	let search = $state('');
 </script>
 
 <svelte:head>
@@ -17,7 +17,7 @@
 		<div
 			class="rounded bg-neutral-200 px-1.5 py-1 font-mono text-xs leading-none"
 		>
-			{repo.count()}
+			{data.total}
 		</div>
 	</div>
 
@@ -25,41 +25,32 @@
 		<form
 			onsubmit={(e) => {
 				e.preventDefault();
-
-				repo.add({title});
-				title = '';
 			}}
 		>
 			<input
 				class="block h-12 w-full rounded border border-neutral-300 px-4 outline-none placeholder:text-neutral-400"
-				placeholder="Todo"
-				bind:value={title}
+				placeholder="Search"
+				bind:value={search}
 			/>
 		</form>
 	</div>
 
 	<div class="mt-8">
 		<ul class="space-y-1.5">
-			{#each repo.todos as todo}
+			{#each data.rows as todo}
 				<li>{@render item(todo)}</li>
 			{/each}
 		</ul>
 	</div>
 </main>
 
-{#snippet item(todo: ITodo)}
+{#snippet item(todo: Todo)}
 	<div class="flex items-center gap-2 rounded border border-neutral-300 p-5">
 		<div>
-			{#if todo.complete}
+			{#if todo.completedAt}
 				<CheckCircleIcon class="text-green-500" />
 			{:else}
-				<button
-					type="button"
-					class="flex"
-					onclick={() => {
-						repo.update(todo.id, {complete: true});
-					}}
-				>
+				<button type="button" class="flex" onclick={() => {}}>
 					<CheckCircleIcon class="pointer-events-none text-neutral-300" />
 					<span class="sr-only">Mark as complete</span>
 				</button>
@@ -70,13 +61,7 @@
 			{todo.title}
 		</p>
 
-		<button
-			type="button"
-			class="group flex"
-			onclick={() => {
-				repo.remove(todo.id);
-			}}
-		>
+		<button type="button" class="group flex" onclick={() => {}}>
 			<XIcon class="h-5 w-5 text-neutral-300 group-hover:text-neutral-500" />
 			<span class="sr-only">Delete</span>
 		</button>
