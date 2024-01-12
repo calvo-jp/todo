@@ -5,7 +5,7 @@ import {nullable, object, parse, string, toTrimmed, transform} from 'valibot';
 import type {PageServerLoad} from './$types';
 
 export const load: PageServerLoad = async (event) => {
-	const session = await event.locals.getSession();
+	const user = event.locals.user;
 
 	const {page, size, search} = parse(schema, {
 		page: event.url.searchParams.get('page'),
@@ -13,11 +13,11 @@ export const load: PageServerLoad = async (event) => {
 		search: event.url.searchParams.get('search'),
 	});
 
-	if (!session) throw redirect(303, '/login');
+	if (!user) throw redirect(303, '/login');
 
 	const where: Prisma.TodoWhereInput = {
 		user: {
-			id: session.user?.id,
+			id: user.id,
 		},
 
 		...(search && {

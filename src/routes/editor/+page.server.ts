@@ -5,14 +5,14 @@ import type {PageServerLoad} from '../$types';
 import type {Actions} from './$types';
 
 export const load: PageServerLoad = async (event) => {
-	if (!event.locals.authenticated) throw redirect(303, '/login');
+	if (!event.locals.user) throw redirect(303, '/login');
 };
 
 export const actions: Actions = {
 	async default(evt) {
-		const session = await evt.locals.getSession();
+		const {user} = evt.locals;
 
-		if (!session) {
+		if (!user) {
 			return {
 				error: 'Not authorized',
 			};
@@ -40,7 +40,7 @@ export const actions: Actions = {
 					name: data.output.name,
 					user: {
 						connect: {
-							id: session.user?.id,
+							id: user.id,
 						},
 					},
 				},

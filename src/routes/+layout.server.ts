@@ -1,10 +1,11 @@
+import {prisma} from '$lib/server/prisma';
 import type {LayoutServerLoad} from './$types';
 
 export const load: LayoutServerLoad = async (event) => {
-	const session = await event.locals.getSession();
-	const authenticated = Boolean(session);
+	const id = event.cookies.get('id');
+	const user = id ? await prisma.user.findUnique({where: {id}}) : null;
 
-	event.locals.authenticated = authenticated;
+	event.locals.user = user;
 
-	return {session};
+	return {user};
 };
