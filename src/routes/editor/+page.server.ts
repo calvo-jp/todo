@@ -1,6 +1,59 @@
-import {redirect} from '@sveltejs/kit';
+import {prisma} from '$lib/server/prisma';
+import {fail, redirect} from '@sveltejs/kit';
+import {minLength, object, safeParse, string, toTrimmed} from 'valibot';
 import type {PageServerLoad} from '../$types';
+import type {Actions} from './$types';
 
 export const load: PageServerLoad = async (event) => {
 	if (!event.locals.authenticated) throw redirect(303, '/login');
+};
+
+export const actions: Actions = {
+	async default(evt) {
+		const session = await evt.locals.getSession();
+
+		if (!session) {
+			return {
+				error: 'Not authorized',
+			};
+		}
+
+		const form = await evt.request.formData();
+		const name = form.get('name');
+		const data = safeParse(
+			object({name: string([toTrimmed(), minLength(2)])}),
+			{name},
+		);
+
+		if (!data.success) {
+			return {
+				error: data.issues[0].message,
+				values: {
+					name,
+				},
+			};
+		}
+
+		try {
+			await prisma.todo.create({
+				data: {
+					name: data.output.name,
+					user: {
+						connect: {
+							id: session.user?.id,
+						},
+					},
+				},
+			});
+
+			redirect(303, '/');
+		} catch {
+			return fail(400, {
+				error: 'Something went wrong',
+				values: {
+					name,
+				},
+			});
+		}
+	},
 };

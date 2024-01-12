@@ -61,7 +61,7 @@ model VerificationToken {
 
 model Todo {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
+  name        String
   completedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
