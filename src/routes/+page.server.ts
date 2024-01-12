@@ -18,6 +18,7 @@ export const load: PageServerLoad = async (event) => {
 		user: {
 			id: session.user?.id,
 		},
+
 		...(search && {
 			title: {
 				contains: search,
@@ -37,6 +38,7 @@ export const load: PageServerLoad = async (event) => {
 		size,
 		rows,
 		total,
+		search,
 	};
 };
 

@@ -1,10 +1,8 @@
 <script lang="ts">
-	import CheckCircleIcon from '$lib/check-circle-icon.svelte';
-	import XIcon from '$lib/x-icon.svelte';
 	import type {Todo} from '@prisma/client';
+	import {SearchIcon, XIcon} from 'lucide-svelte';
 
 	let {data} = $props();
-	let search = $state('');
 </script>
 
 <svelte:head>
@@ -21,19 +19,21 @@
 		</div>
 	</div>
 
-	<div class="mt-8">
-		<form
-			onsubmit={(e) => {
-				e.preventDefault();
-			}}
-		>
+	<form class="mt-8" method="get">
+		<input type="hidden" name="page" value={data.page} />
+		<input type="hidden" name="size" value={data.size} />
+
+		<div class="relative">
 			<input
-				class="block h-12 w-full rounded border border-neutral-300 px-4 outline-none placeholder:text-neutral-400"
+				name="search"
+				value={data.search}
 				placeholder="Search"
-				bind:value={search}
+				class="block h-12 w-full rounded border border-neutral-300 pl-10 pr-4 outline-none placeholder:text-neutral-400"
 			/>
-		</form>
-	</div>
+
+			<SearchIcon class="absolute left-2 top-1/2 h-5 w-5 -translate-y-1/2" />
+		</div>
+	</form>
 
 	<div class="mt-8">
 		<ul class="space-y-1.5">
@@ -46,17 +46,6 @@
 
 {#snippet item(todo: Todo)}
 	<div class="flex items-center gap-2 rounded border border-neutral-300 p-5">
-		<div>
-			{#if todo.completedAt}
-				<CheckCircleIcon class="text-green-500" />
-			{:else}
-				<button type="button" class="flex" onclick={() => {}}>
-					<CheckCircleIcon class="pointer-events-none text-neutral-300" />
-					<span class="sr-only">Mark as complete</span>
-				</button>
-			{/if}
-		</div>
-
 		<p class="grow">
 			{todo.title}
 		</p>
