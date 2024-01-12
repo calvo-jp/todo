@@ -4,12 +4,14 @@ import {SvelteKitAuth} from '@auth/sveltekit';
 import GoogleProvider from '@auth/sveltekit/providers/google';
 import type {Handle} from '@sveltejs/kit';
 
-export const handle = SvelteKitAuth({
-	adapter: PrismaAdapter(prisma),
-	providers: [GoogleProvider],
-	pages: {
-		error: '/login',
-		signIn: '/login',
-		signOut: '/login',
-	},
+export const handle = SvelteKitAuth(async () => {
+	return {
+		adapter: PrismaAdapter(prisma),
+		providers: [GoogleProvider],
+		pages: {
+			error: '/login',
+			signIn: '/login',
+			signOut: '/login',
+		},
+	};
 }) satisfies Handle;
