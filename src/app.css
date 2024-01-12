@@ -1,3 +1,10 @@
 @tailwind base;
+
+@layer base {
+	html {
+		color-scheme: light;
+	}
+}
+
 @tailwind components;
 @tailwind utilities;
