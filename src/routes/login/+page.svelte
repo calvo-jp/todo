@@ -2,5 +2,5 @@
 </script>
 
 <svelte:head>
-	<title>Login</title>
+	<title>Todos | Login</title>
 </svelte:head>

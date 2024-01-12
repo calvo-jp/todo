@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>Todo App</title>
+	<title>Todos</title>
 </svelte:head>
 
 <main class="mx-auto max-w-screen-md p-4 lg:p-16">

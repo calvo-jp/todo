@@ -2,5 +2,5 @@
 </script>
 
 <svelte:head>
-	<title>Register</title>
+	<title>Todos | Register</title>
 </svelte:head>
