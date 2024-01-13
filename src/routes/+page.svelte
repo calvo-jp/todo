@@ -7,7 +7,9 @@
 
 <script lang="ts">
 	import type {Todo} from '@prisma/client';
+	import {formatDistanceToNow} from 'date-fns';
 	import {SearchIcon, SquarePenIcon, XIcon} from 'lucide-svelte';
+	import {twMerge} from 'tailwind-merge';
 
 	let {data} = $props();
 	let total = $derived(numberFormatter.format(data.total));
@@ -65,10 +67,29 @@
 </div>
 
 {#snippet item(todo: Todo)}
-	<div class="flex items-center gap-2 border border-gray-200 p-5">
-		<p class="grow">
-			{todo.name}
-		</p>
+	<div class="flex items-center gap-3 border border-gray-200 p-5">
+		<form method="post" action="/?/complete">
+			<input type="hidden" name="id" value={todo.id} />
+			<button
+				type="submit"
+				class="flex disabled:cursor-not-allowed"
+				disabled={Boolean(todo.completedAt)}
+			>
+				{@render check(Boolean(todo.completedAt))}
+			</button>
+		</form>
+
+		<div class="grow">
+			<p>
+				{todo.name}
+			</p>
+			<p class="text-sm leading-none text-gray-500">
+				{formatDistanceToNow(todo.createdAt, {
+					addSuffix: true,
+					includeSeconds: true,
+				})}
+			</p>
+		</div>
 
 		<form method="post" action="/?/delete">
 			<input type="hidden" name="id" value={todo.id} />
@@ -78,4 +99,22 @@
 			</button>
 		</form>
 	</div>
+{/snippet}
+
+{#snippet check(highlight:boolean)}
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 24 24"
+		fill="currentColor"
+		class={twMerge(
+			'h-6 w-6 transition-colors duration-200',
+			highlight ? 'text-green-500' : 'text-gray-400 hover:text-gray-500',
+		)}
+	>
+		<path
+			d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+			clip-rule="evenodd"
+			fill-rule="evenodd"
+		/>
+	</svg>
 {/snippet}

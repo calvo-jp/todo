@@ -93,4 +93,33 @@ export const actions: Actions = {
 			});
 		}
 	},
+	async complete(event) {
+		const form = await event.request.formData();
+		const id = form.get('id')?.toString();
+
+		if (!event.locals.user) {
+			return fail(401, {
+				error: 'Not authorized',
+			});
+		}
+
+		if (!id) {
+			return fail(400, {
+				error: "Missing 'id'",
+			});
+		}
+
+		try {
+			await prisma.todo.update({
+				where: {id},
+				data: {
+					completedAt: new Date(),
+				},
+			});
+		} catch (error) {
+			return fail(500, {
+				error: 'Something went wrong',
+			});
+		}
+	},
 };
