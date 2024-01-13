@@ -1,5 +1,5 @@
 import {prisma} from '$lib/server/prisma';
-import {fail, redirect} from '@sveltejs/kit';
+import {redirect} from '@sveltejs/kit';
 import {minLength, object, safeParse, string, toTrimmed} from 'valibot';
 import type {PageServerLoad} from '../$types';
 import type {Actions} from './$types';
@@ -19,37 +19,29 @@ export const actions: Actions = {
 		}
 
 		const form = await evt.request.formData();
-		const name = form.get('name');
-		const data = safeParse(
-			object({name: string([toTrimmed(), minLength(2)])}),
-			{name},
-		);
 
-		if (!data.success) {
+		const values = {
+			name: form.get('name'),
+		};
+
+		const parsed = safeParse(schema, values);
+
+		if (!parsed.success) {
 			return {
-				error: data.issues[0].message,
-				values: {
-					name,
-				},
+				error: parsed.issues[0].message,
+				values,
 			};
 		}
 
-		try {
-			await prisma.todo.create({
-				data: {
-					name: data.output.name,
-					userId: user.id,
-				},
-			});
-		} catch (e) {
-			return fail(400, {
-				error: 'Something went wrong',
-				values: {
-					name,
-				},
-			});
-		}
+		await prisma.todo.create({
+			data: {
+				name: parsed.output.name,
+				userId: user.id,
+			},
+		});
 
 		redirect(303, '/');
 	},
 };
+
+const schema = object({name: string([toTrimmed(), minLength(2)])});
