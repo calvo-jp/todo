@@ -27,27 +27,29 @@ export const actions: Actions = {
 			});
 		}
 
-		try {
-			const {email, password} = parsed.output;
-			const user = await prisma.user.findUnique({where: {email}});
+		const {email, password} = parsed.output;
+		const user = await prisma.user.findUnique({where: {email}});
 
-			if (user && (await bcrypt.compare(password, user.password))) {
-				event.locals.user = user;
-				event.cookies.set('user', user.id, {path: '/'});
-
-				throw redirect(303, '/');
-			}
-
+		if (!user) {
 			return fail(400, {
 				error: 'Invalid username or password',
 				values,
 			});
-		} catch {
-			return fail(500, {
-				error: 'Something went wrong',
+		}
+
+		const matches = await bcrypt.compare(password, user.password);
+
+		if (!matches) {
+			return fail(400, {
+				error: 'Invalid username or password',
 				values,
 			});
 		}
+
+		event.locals.user = user;
+		event.cookies.set('user', user.id, {path: '/'});
+
+		redirect(303, '/');
 	},
 };
 

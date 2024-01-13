@@ -1,4 +1,5 @@
 <script lang="ts">
+	import {enhance} from '$app/forms';
 	import {AlertCircleIcon} from 'lucide-svelte';
 
 	let {form} = $props();
@@ -19,7 +20,7 @@
 		</div>
 	{/if}
 
-	<form method="post" class="space-y-5">
+	<form method="post" class="space-y-5" use:enhance>
 		<input
 			name="name"
 			placeholder="Name"

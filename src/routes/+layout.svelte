@@ -1,4 +1,5 @@
 <script lang="ts">
+	import {enhance} from '$app/forms';
 	import '../app.css';
 
 	const {children, data} = $props();
@@ -13,10 +14,10 @@
 				{data.user.email}
 			</div>
 			<div class="text-sm leading-none text-gray-200">|</div>
-			<form method="post" action="/?/logout" class="leading-none">
-				<button type="submit" class="text-sm leading-none text-red-500"
-					>Logout</button
-				>
+			<form method="post" action="/?/logout" class="leading-none" use:enhance>
+				<button type="submit" class="text-sm leading-none text-red-500">
+					Logout
+				</button>
 			</form>
 		</div>
 	</header>

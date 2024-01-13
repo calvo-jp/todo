@@ -28,24 +28,27 @@ export const actions: Actions = {
 			});
 		}
 
-		try {
-			const user = await prisma.user.create({
-				data: {
-					...parsed.output,
-					password: await bcrypt.hash(parsed.output.password, await genSalt(8)),
-				},
-			});
+		const {name, email, password} = parsed.output;
 
-			event.locals.user = user;
-			event.cookies.set('user', user.id, {path: '/'});
-
-			throw redirect(303, '/');
-		} catch {
+		if (await prisma.user.exists({email})) {
 			return fail(400, {
-				error: 'Validation error',
+				error: 'Email already in use',
 				values,
 			});
 		}
+
+		const user = await prisma.user.create({
+			data: {
+				name,
+				email,
+				password: await bcrypt.hash(password, await genSalt(8)),
+			},
+		});
+
+		event.locals.user = user;
+		event.cookies.set('user', user.id, {path: '/'});
+
+		redirect(303, '/');
 	},
 };
 

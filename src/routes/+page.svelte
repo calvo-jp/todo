@@ -6,6 +6,7 @@
 </script>
 
 <script lang="ts">
+	import {enhance} from '$app/forms';
 	import type {Todo} from '@prisma/client';
 	import {formatDistanceToNow} from 'date-fns';
 	import {SearchIcon, SquarePenIcon, XIcon} from 'lucide-svelte';
@@ -68,7 +69,7 @@
 
 {#snippet item(todo: Todo)}
 	<div class="flex items-center gap-3 border border-gray-200 p-5">
-		<form method="post" action="/?/complete">
+		<form method="post" action="/?/complete" use:enhance>
 			<input type="hidden" name="id" value={todo.id} />
 			<button
 				type="submit"
@@ -91,7 +92,7 @@
 			</p>
 		</div>
 
-		<form method="post" action="/?/delete">
+		<form method="post" action="/?/delete" use:enhance>
 			<input type="hidden" name="id" value={todo.id} />
 			<button type="submit" class="group flex">
 				<XIcon class="h-5 w-5 text-gray-200 group-hover:text-gray-500" />

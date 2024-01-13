@@ -85,13 +85,7 @@ export const actions: Actions = {
 			});
 		}
 
-		try {
-			await prisma.todo.delete({where: {id}});
-		} catch (error) {
-			return fail(500, {
-				error: 'Something went wrong',
-			});
-		}
+		await prisma.todo.delete({where: {id}});
 	},
 	async complete(event) {
 		const form = await event.request.formData();
@@ -109,17 +103,11 @@ export const actions: Actions = {
 			});
 		}
 
-		try {
-			await prisma.todo.update({
-				where: {id},
-				data: {
-					completedAt: new Date(),
-				},
-			});
-		} catch (error) {
-			return fail(500, {
-				error: 'Something went wrong',
-			});
-		}
+		await prisma.todo.update({
+			where: {id},
+			data: {
+				completedAt: new Date(),
+			},
+		});
 	},
 };
