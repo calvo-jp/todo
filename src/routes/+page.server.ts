@@ -23,6 +23,7 @@ export const load: PageServerLoad = async (event) => {
 		...(search && {
 			AND: {
 				name: {
+					mode: 'insensitive',
 					contains: search,
 				},
 			},
