@@ -1,4 +1,6 @@
 <script lang="ts">
+	import {AlertCircleIcon} from 'lucide-svelte';
+
 	let {form} = $props();
 </script>
 
@@ -6,18 +8,38 @@
 	<title>Todo | Editor</title>
 </svelte:head>
 
-<div>
-	<form method="post" novalidate>
-		{#if form?.error}
-			<div>{form.error}</div>
-		{/if}
+<div class="mx-auto w-full max-w-[22rem] py-16">
+	{#if form?.error}
+		<div
+			role="alert"
+			class="mb-6 flex items-center gap-2 bg-red-100 px-5 py-4 leading-none text-red-500"
+		>
+			<AlertCircleIcon class="h-5 w-5" />
+			<p>{form.error}</p>
+		</div>
+	{/if}
 
+	<form method="post" novalidate class="space-y-5">
 		<input
-			placeholder="Todo"
 			name="name"
-			class="block w-full"
 			value={form?.values?.name}
+			placeholder="Todo"
+			class="block h-12 w-full border border-gray-200 px-4 outline-none placeholder:text-gray-400"
 		/>
-		<button type="submit" class="block w-full">Create</button>
+
+		<div class="flex gap-3">
+			<a
+				href="/"
+				class="flex h-12 w-full items-center justify-center border border-gray-200 outline-none"
+			>
+				Cancel
+			</a>
+			<button
+				type="submit"
+				class="block h-12 w-full bg-gray-900 text-white outline-none"
+			>
+				Create
+			</button>
+		</div>
 	</form>
 </div>

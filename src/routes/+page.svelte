@@ -48,7 +48,7 @@
 
 		<a
 			href="/editor"
-			class="flex h-12 w-12 items-center justify-center rounded border border-gray-200"
+			class="flex h-12 w-12 items-center justify-center border border-gray-200"
 		>
 			<span class="sr-only">Create Todo</span>
 			<SquarePenIcon class="h-5 w-5 text-gray-700" strokeWidth="1.66667" />
@@ -65,13 +65,14 @@
 </div>
 
 {#snippet item(todo: Todo)}
-	<div class="flex items-center gap-2 rounded border border-gray-200 p-5">
+	<div class="flex items-center gap-2 border border-gray-200 p-5">
 		<p class="grow">
-			{todo.title}
+			{todo.name}
 		</p>
 
-		<form>
-			<button type="button" class="group flex">
+		<form method="post" action="/?/delete">
+			<input type="hidden" name="id" value={todo.id} />
+			<button type="submit" class="group flex">
 				<XIcon class="h-5 w-5 text-gray-200 group-hover:text-gray-500" />
 				<span class="sr-only">Delete</span>
 			</button>

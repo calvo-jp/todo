@@ -1,6 +1,6 @@
 import {prisma} from '$lib/server/prisma';
 import type {Prisma} from '@prisma/client';
-import {redirect} from '@sveltejs/kit';
+import {fail, redirect} from '@sveltejs/kit';
 import {nullable, object, parse, string, toTrimmed, transform} from 'valibot';
 import type {Actions, PageServerLoad} from './$types';
 
@@ -34,6 +34,9 @@ export const load: PageServerLoad = async (event) => {
 		skip: size * (page - 1),
 		take: size,
 		where,
+		orderBy: {
+			createdAt: 'desc',
+		},
 	});
 
 	return {
@@ -61,11 +64,33 @@ const schema = object({
 
 export const actions: Actions = {
 	async logout(event) {
-		console.log('Hello');
-
 		event.locals.user = null;
 		event.cookies.delete('user', {path: '/'});
 
 		redirect(303, '/login');
+	},
+	async delete(event) {
+		const form = await event.request.formData();
+		const id = form.get('id')?.toString();
+
+		if (!event.locals.user) {
+			return fail(401, {
+				error: 'Not authorized',
+			});
+		}
+
+		if (!id) {
+			return fail(400, {
+				error: "Missing 'id'",
+			});
+		}
+
+		try {
+			await prisma.todo.delete({where: {id}});
+		} catch (error) {
+			return fail(500, {
+				error: 'Something went wrong',
+			});
+		}
 	},
 };

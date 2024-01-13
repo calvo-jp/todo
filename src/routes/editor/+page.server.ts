@@ -10,7 +10,7 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	async default(evt) {
-		const {user} = evt.locals;
+		const user = evt.locals.user;
 
 		if (!user) {
 			return {
@@ -38,16 +38,10 @@ export const actions: Actions = {
 			await prisma.todo.create({
 				data: {
 					name: data.output.name,
-					user: {
-						connect: {
-							id: user.id,
-						},
-					},
+					userId: user.id,
 				},
 			});
-
-			redirect(303, '/');
-		} catch {
+		} catch (e) {
 			return fail(400, {
 				error: 'Something went wrong',
 				values: {
@@ -55,5 +49,7 @@ export const actions: Actions = {
 				},
 			});
 		}
+
+		redirect(303, '/');
 	},
 };
