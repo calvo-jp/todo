@@ -2,7 +2,7 @@ import {prisma} from '$lib/server/prisma';
 import type {Prisma} from '@prisma/client';
 import {redirect} from '@sveltejs/kit';
 import {nullable, object, parse, string, toTrimmed, transform} from 'valibot';
-import type {PageServerLoad} from './$types';
+import type {Actions, PageServerLoad} from './$types';
 
 export const load: PageServerLoad = async (event) => {
 	const user = event.locals.user;
@@ -13,16 +13,18 @@ export const load: PageServerLoad = async (event) => {
 		search: event.url.searchParams.get('search'),
 	});
 
-	if (!user) throw redirect(303, '/login');
+	if (!user) return redirect(303, '/login');
+
+	const {id} = user;
 
 	const where: Prisma.TodoWhereInput = {
-		user: {
-			id: user.id,
-		},
+		user: {id},
 
 		...(search && {
-			title: {
-				contains: search,
+			AND: {
+				name: {
+					contains: search,
+				},
 			},
 		}),
 	};
@@ -56,3 +58,14 @@ const schema = object({
 	}),
 	search: nullable(string([toTrimmed()])),
 });
+
+export const actions: Actions = {
+	async logout(event) {
+		console.log('Hello');
+
+		event.locals.user = null;
+		event.cookies.delete('user', {path: '/'});
+
+		redirect(303, '/login');
+	},
+};
