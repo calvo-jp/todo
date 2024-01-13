@@ -9,6 +9,9 @@ export default {
 				sans: ["'Lato'", ...defaultTheme.fontFamily.sans],
 				mono: ["'Fira Code'", ...defaultTheme.fontFamily.mono],
 			},
+			data: {
+				selected: 'selected',
+			},
 		},
 	},
 	plugins: [],

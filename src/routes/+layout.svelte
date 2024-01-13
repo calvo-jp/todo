@@ -1,13 +1,14 @@
 <script lang="ts">
-	import {enhance} from '$app/forms';
 	import '../app.css';
-	import Logo from './logo.svelte';
+
+	import {enhance} from '$app/forms';
+	import Logo from '$lib/logo.svelte';
 
 	const {children, data} = $props();
 </script>
 
 {#if data.user}
-	<header class="flex gap-2 border-b border-gray-200 px-8 py-5">
+	<header class="flex gap-2 border-b border-gray-200 px-8 py-3">
 		<div>
 			<Logo />
 		</div>

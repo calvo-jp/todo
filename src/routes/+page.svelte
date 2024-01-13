@@ -7,13 +7,28 @@
 
 <script lang="ts">
 	import {enhance} from '$app/forms';
+	import CheckCircleIcon from '$lib/check-circle-icon.svelte';
+	import {dataAttr} from '$lib/data-attr.js';
+	import {paginate} from '$lib/paginate';
 	import type {Todo} from '@prisma/client';
 	import {formatDistanceToNow} from 'date-fns';
-	import {SearchIcon, SquarePenIcon, XIcon} from 'lucide-svelte';
+	import {
+		ChevronLeftIcon,
+		ChevronRightIcon,
+		SearchIcon,
+		SquarePenIcon,
+		XIcon,
+	} from 'lucide-svelte';
 	import {twMerge} from 'tailwind-merge';
 
 	let {data} = $props();
-	let total = $derived(numberFormatter.format(data.total));
+	let {pages, pageRange, nextPage, prevPage, totalPages} = $derived(
+		paginate({
+			page: data.page,
+			size: data.size,
+			count: data.count,
+		}),
+	);
 </script>
 
 <svelte:head>
@@ -24,7 +39,7 @@
 	<div class="flex items-center gap-2">
 		<h2 class="text-2xl font-bold">Todos</h2>
 		<div class="rounded bg-gray-200 px-1.5 py-1 font-mono text-xs leading-none">
-			{total}
+			{numberFormatter.format(data.count)}
 		</div>
 	</div>
 
@@ -61,31 +76,76 @@
 	<div class="mt-8">
 		<ul class="space-y-1.5">
 			{#each data.rows as todo}
-				<li>{@render item(todo)}</li>
+				<li>
+					{@render item(todo)}
+				</li>
 			{/each}
 		</ul>
 	</div>
+
+	<div class="mt-8 flex items-center">
+		<div class="text-gray-600">
+			Showing {pageRange.start}-{pageRange.until} of {data.count}
+		</div>
+		<div class="grow" />
+		<div class="flex">
+			<a
+				href="/?page={prevPage?.value ??
+					1}&size={data.size}&search={data.search}"
+				class="flex h-10 w-10 items-center justify-center border-y border-r border-gray-200 text-gray-500 first:border-l disabled:cursor-not-allowed data-selected:text-gray-900"
+			>
+				<ChevronLeftIcon strokeWidth="1.66667" class="h-5 w-5" />
+				<span class="sr-only">Previous page</span>
+			</a>
+
+			{#each pages as page}
+				<a
+					href="/?page={page.value}&size={data.size}&search={data.search}"
+					class="flex h-10 w-10 items-center justify-center border-y border-r border-gray-200 text-gray-500 first:border-l disabled:cursor-not-allowed data-selected:text-gray-900"
+					data-selected={dataAttr(page.selected)}
+				>
+					<span class="sr-only">Page </span>
+					{page.value}
+				</a>
+			{/each}
+
+			<a
+				href="/?page={nextPage?.value ??
+					totalPages}&size={data.size}&search={data.search}"
+				class="flex h-10 w-10 items-center justify-center border-y border-r border-gray-200 text-gray-500 first:border-l disabled:cursor-not-allowed data-selected:text-gray-900"
+			>
+				<ChevronRightIcon strokeWidth="1.66667" class="h-5 w-5" />
+				<span class="sr-only">Next page</span>
+			</a>
+		</div>
+	</div>
 </div>
 
-{#snippet item(todo: Todo)}
+{#snippet item(data:Todo)}
 	<div class="flex items-center gap-3 border border-gray-200 p-5">
 		<form method="post" action="/?/complete" use:enhance>
-			<input type="hidden" name="id" value={todo.id} />
+			<input type="hidden" name="id" value={data.id} />
 			<button
 				type="submit"
 				class="flex disabled:cursor-not-allowed"
-				disabled={Boolean(todo.completedAt)}
+				disabled={Boolean(data.completedAt)}
 			>
-				{@render check(Boolean(todo.completedAt))}
+				<CheckCircleIcon
+					class={twMerge(
+						'h-6 w-6 transition-colors duration-200',
+						Boolean(data.completedAt)
+							? 'text-green-500'
+							: 'text-gray-400 hover:text-gray-500',
+					)}
+				/>
+				<span class="sr-only">Mark complete</span>
 			</button>
 		</form>
 
 		<div class="grow">
-			<p>
-				{todo.name}
-			</p>
+			<h3>{data.name}</h3>
 			<p class="text-sm leading-none text-gray-500">
-				{formatDistanceToNow(todo.createdAt, {
+				{formatDistanceToNow(data.createdAt, {
 					addSuffix: true,
 					includeSeconds: true,
 				})}
@@ -93,29 +153,11 @@
 		</div>
 
 		<form method="post" action="/?/delete" use:enhance>
-			<input type="hidden" name="id" value={todo.id} />
+			<input type="hidden" name="id" value={data.id} />
 			<button type="submit" class="group flex">
 				<XIcon class="h-5 w-5 text-gray-200 group-hover:text-gray-500" />
 				<span class="sr-only">Delete</span>
 			</button>
 		</form>
 	</div>
-{/snippet}
-
-{#snippet check(highlight:boolean)}
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 0 24 24"
-		fill="currentColor"
-		class={twMerge(
-			'h-6 w-6 transition-colors duration-200',
-			highlight ? 'text-green-500' : 'text-gray-400 hover:text-gray-500',
-		)}
-	>
-		<path
-			d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
-			clip-rule="evenodd"
-			fill-rule="evenodd"
-		/>
-	</svg>
 {/snippet}
