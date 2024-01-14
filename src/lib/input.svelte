@@ -7,7 +7,7 @@
 
 <input
 	class={twMerge(
-		'block h-12 w-full border border-gray-200 px-4 outline-none transition-colors duration-200',
+		'block h-12 w-full border border-gray-200 px-4 outline-none transition-all duration-200',
 		'placeholder:text-gray-400',
 		className,
 	)}
