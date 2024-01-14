@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {enhance} from '$app/forms';
-	import {AlertCircleIcon} from 'lucide-svelte';
+	import ExclamationCircleIcon from '$lib/exclamation-circle-icon.svelte';
 
 	let {form} = $props();
 </script>
@@ -15,7 +15,7 @@
 			role="alert"
 			class="mb-6 flex items-center gap-2 bg-red-100 px-5 py-4 leading-none text-red-500"
 		>
-			<AlertCircleIcon class="h-5 w-5" />
+			<ExclamationCircleIcon class="h-5 w-5" />
 			<p>{form.error}</p>
 		</div>
 	{/if}

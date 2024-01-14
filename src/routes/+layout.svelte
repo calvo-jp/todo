@@ -8,22 +8,28 @@
 </script>
 
 {#if data.user}
-	<header class="flex gap-2 border-b border-gray-200 px-8 py-3">
+	<header class="flex items-center gap-2 border-b border-gray-200 px-8 py-3">
 		<div>
 			<Logo />
 		</div>
 		<div class="grow" />
-		<div class="flex items-center gap-2">
-			<div class="leading-none text-gray-700">
-				{data.user.email}
-			</div>
-			<div class="text-sm leading-none text-gray-200">|</div>
-			<form method="post" action="/?/logout" class="leading-none" use:enhance>
-				<button type="submit" class="text-sm leading-none text-red-500">
-					Logout
-				</button>
-			</form>
-		</div>
+		<nav>
+			<ul class="flex items-center gap-5 leading-none text-gray-700">
+				<li>
+					<a href="/">Home</a>
+				</li>
+				<li>
+					<a href="/settings">
+						{data.user.name}
+					</a>
+				</li>
+				<li>
+					<form method="post" action="/?/logout" use:enhance>
+						<button type="submit">Logout</button>
+					</form>
+				</li>
+			</ul>
+		</nav>
 	</header>
 {/if}
 

@@ -6,8 +6,8 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ["'Lato'", ...defaultTheme.fontFamily.sans],
-				mono: ["'Fira Code'", ...defaultTheme.fontFamily.mono],
+				body: ["'Source Sans 3'", ...defaultTheme.fontFamily.sans],
+				heading: ["'Titillium Web'", ...defaultTheme.fontFamily.sans],
 			},
 			data: {
 				selected: 'selected',

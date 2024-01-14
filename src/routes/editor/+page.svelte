@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {enhance} from '$app/forms';
-	import {AlertCircleIcon} from 'lucide-svelte';
+	import ExclamationCircleIcon from '$lib/exclamation-circle-icon.svelte';
 
 	let {form} = $props();
 </script>
@@ -15,12 +15,12 @@
 			role="alert"
 			class="mb-6 flex items-center gap-2 bg-red-100 px-5 py-4 leading-none text-red-500"
 		>
-			<AlertCircleIcon class="h-5 w-5" />
+			<ExclamationCircleIcon class="h-5 w-5" />
 			<p>{form.error}</p>
 		</div>
 	{/if}
 
-	<form method="post" novalidate class="space-y-5" use:enhance>
+	<form method="post" novalidate class="space-y-6" use:enhance>
 		<input
 			name="name"
 			value={form?.values?.name}
@@ -28,19 +28,11 @@
 			class="block h-12 w-full border border-gray-200 px-4 outline-none placeholder:text-gray-400"
 		/>
 
-		<div class="flex gap-3">
-			<a
-				href="/"
-				class="flex h-12 w-full items-center justify-center border border-gray-200 outline-none"
-			>
-				Cancel
-			</a>
-			<button
-				type="submit"
-				class="block h-12 w-full bg-gray-900 text-white outline-none"
-			>
-				Create
-			</button>
-		</div>
+		<button
+			type="submit"
+			class="block h-12 w-full bg-gray-900 text-white outline-none"
+		>
+			Create
+		</button>
 	</form>
 </div>

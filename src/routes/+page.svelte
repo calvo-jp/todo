@@ -1,24 +1,26 @@
 <script context="module">
-	const numberFormatter = new Intl.NumberFormat('en-US', {
-		notation: 'compact',
-		compactDisplay: 'short',
-	});
+	function truncateNumber(value: number) {
+		const fmt = new Intl.NumberFormat('en-US', {
+			notation: 'compact',
+			compactDisplay: 'short',
+		});
+
+		return fmt.format(value);
+	}
 </script>
 
 <script lang="ts">
 	import {enhance} from '$app/forms';
 	import CheckCircleIcon from '$lib/check-circle-icon.svelte';
+	import ChevronLeftIcon from '$lib/chevron-left-icon.svelte';
+	import ChevronRightIcon from '$lib/chevron-right-icon.svelte';
 	import {dataAttr} from '$lib/data-attr.js';
 	import {paginate} from '$lib/paginate';
+	import PlusIcon from '$lib/plus-icon.svelte';
+	import SearchIcon from '$lib/search-icon.svelte';
+	import XIcon from '$lib/x-icon.svelte';
 	import type {Todo} from '@prisma/client';
 	import {formatDistanceToNow} from 'date-fns';
-	import {
-		ChevronLeftIcon,
-		ChevronRightIcon,
-		SearchIcon,
-		SquarePenIcon,
-		XIcon,
-	} from 'lucide-svelte';
 	import {twMerge} from 'tailwind-merge';
 
 	let {data} = $props();
@@ -37,9 +39,11 @@
 
 <div class="mx-auto max-w-screen-md p-4 lg:p-16">
 	<div class="flex items-center gap-2">
-		<h2 class="text-2xl font-bold">Todos</h2>
-		<div class="rounded bg-gray-200 px-1.5 py-1 font-mono text-xs leading-none">
-			{numberFormatter.format(data.count)}
+		<h2 class="font-heading text-2xl font-bold">Todos</h2>
+		<div
+			class="rounded bg-gray-200 px-1.5 py-1 font-heading text-xs leading-none"
+		>
+			{truncateNumber(data.count)}
 		</div>
 	</div>
 
@@ -54,12 +58,11 @@
 					name="search"
 					value={data.search}
 					placeholder="Search"
-					class="block h-12 w-full appearance-none rounded border border-gray-200 pl-12 pr-4 outline-none placeholder:text-gray-400"
+					class="block h-12 w-full appearance-none border border-gray-200 pl-12 pr-4 outline-none placeholder:text-gray-400"
 				/>
 
 				<SearchIcon
 					class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-500"
-					strokeWidth="1.66667"
 				/>
 			</div>
 		</form>
@@ -69,7 +72,7 @@
 			class="flex h-12 w-12 items-center justify-center border border-gray-200"
 		>
 			<span class="sr-only">Create Todo</span>
-			<SquarePenIcon class="h-5 w-5 text-gray-700" strokeWidth="1.66667" />
+			<PlusIcon class="h-5 w-5 text-gray-700" />
 		</a>
 	</div>
 
@@ -94,7 +97,7 @@
 					1}&size={data.size}&search={data.search}"
 				class="flex h-10 w-10 items-center justify-center border-y border-r border-gray-200 text-gray-500 first:border-l disabled:cursor-not-allowed data-selected:text-gray-900"
 			>
-				<ChevronLeftIcon strokeWidth="1.66667" class="h-5 w-5" />
+				<ChevronLeftIcon class="h-5 w-5" />
 				<span class="sr-only">Previous page</span>
 			</a>
 
@@ -114,7 +117,7 @@
 					totalPages}&size={data.size}&search={data.search}"
 				class="flex h-10 w-10 items-center justify-center border-y border-r border-gray-200 text-gray-500 first:border-l disabled:cursor-not-allowed data-selected:text-gray-900"
 			>
-				<ChevronRightIcon strokeWidth="1.66667" class="h-5 w-5" />
+				<ChevronRightIcon class="h-5 w-5" />
 				<span class="sr-only">Next page</span>
 			</a>
 		</div>
