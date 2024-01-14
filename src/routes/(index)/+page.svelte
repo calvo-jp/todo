@@ -48,7 +48,7 @@
 		</div>
 	</div>
 
-	<div class="mt-8 flex items-center gap-3">
+	<div class="mt-5 flex items-center gap-3">
 		<form method="get" class="flex grow">
 			<input type="hidden" name="page" value={data.page} />
 			<input type="hidden" name="size" value={data.size} />
@@ -77,17 +77,13 @@
 		</a>
 	</div>
 
-	<div class="mt-8">
-		<ul class="space-y-1.5">
-			{#each data.rows as todo}
-				<li>
-					{@render item(todo)}
-				</li>
-			{/each}
-		</ul>
+	<div class="mt-12 space-y-1.5">
+		{#each data.rows as todo}
+			{@render item(todo)}
+		{/each}
 	</div>
 
-	<div class="mt-8 flex items-center">
+	<div class="mt-12 flex items-center">
 		<div class="text-gray-600">
 			Showing {pageRange.start}-{pageRange.until} of {data.count}
 		</div>
