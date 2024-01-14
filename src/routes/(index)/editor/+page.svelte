@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import ExclamationCircleIcon from '$lib/exclamation-circle-icon.svelte';
+	import {enhance} from '$app/forms';
+	import Alert from '$lib/alert.svelte';
 
 	let {form} = $props();
 </script>
@@ -11,13 +11,9 @@
 
 <div class="mx-auto w-full max-w-[22rem] py-16">
 	{#if form && !form.success}
-		<div
-			role="alert"
-			class="mb-6 flex items-center gap-2 bg-red-100 px-5 py-4 leading-none text-red-500"
-		>
-			<ExclamationCircleIcon class="h-5 w-5" />
-			<p>{form.message}</p>
-		</div>
+		<Alert status="error" class="mb-6">
+			{form.message}
+		</Alert>
 	{/if}
 
 	<form method="post" novalidate class="space-y-6" use:enhance>

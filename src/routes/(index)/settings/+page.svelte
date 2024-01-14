@@ -1,8 +1,6 @@
 <script lang="ts">
 	import {enhance} from '$app/forms';
-	import CheckCircleIcon from '$lib/check-circle-icon.svelte';
-	import ExclamationCircleIcon from '$lib/exclamation-circle-icon.svelte';
-	import {twMerge} from 'tailwind-merge';
+	import Alert from '$lib/alert.svelte';
 
 	let {form, data} = $props();
 </script>
@@ -13,23 +11,15 @@
 
 <div class="mx-auto w-full max-w-[22rem] py-16">
 	{#if form}
-		<div
-			role="alert"
-			class={twMerge(
-				'mb-6 flex items-center gap-2 px-5 py-4 leading-none',
-				form.success
-					? 'bg-green-100 text-green-500'
-					: 'bg-red-100 text-red-500',
-			)}
-		>
-			{#if form.success}
-				<CheckCircleIcon class="h-5 w-5" />
-				<p>{form.message}</p>
-			{:else}
-				<ExclamationCircleIcon class="h-5 w-5" />
-				<p>{form.message}</p>
-			{/if}
-		</div>
+		{#if form.success}
+			<Alert class="mb-6">
+				{form.message}
+			</Alert>
+		{:else}
+			<Alert status="error" class="mb-6">
+				{form.message}
+			</Alert>
+		{/if}
 	{/if}
 
 	<form method="post" class="space-y-5" use:enhance>
