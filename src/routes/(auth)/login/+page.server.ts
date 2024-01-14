@@ -50,6 +50,9 @@ export const actions: Actions = {
 };
 
 const schema = object({
-	email: string([email()]),
-	password: string([toTrimmed(), minLength(8)]),
+	email: string([email('Invalid email')]),
+	password: string([
+		toTrimmed(),
+		minLength(8, 'Password must be 8 or more characters'),
+	]),
 });

@@ -17,7 +17,7 @@
 	</Alert>
 {/if}
 
-<form method="post" class="space-y-5" use:enhance>
+<form method="post" novalidate class="space-y-5" use:enhance>
 	<Input type="email" name="email" placeholder="Email" />
 	<Input type="password" name="password" placeholder="Password" />
 	<Button type="submit">Login</Button>

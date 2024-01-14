@@ -37,4 +37,9 @@ export const actions: Actions = {
 	},
 };
 
-const schema = object({name: string([toTrimmed(), minLength(2)])});
+const schema = object({
+	name: string([
+		toTrimmed(),
+		minLength(2, 'Todo must be 2 or more characters'),
+	]),
+});

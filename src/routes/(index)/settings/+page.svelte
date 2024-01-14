@@ -24,7 +24,7 @@
 		{/if}
 	{/if}
 
-	<form method="post" class="space-y-5" use:enhance>
+	<form method="post" novalidate class="space-y-5" use:enhance>
 		<Input name="name" placeholder="Name" value={data.user?.name} />
 		<Input
 			type="email"
