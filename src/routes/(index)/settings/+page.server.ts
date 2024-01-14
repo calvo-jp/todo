@@ -1,15 +1,7 @@
 import {prisma} from '$lib/server/prisma';
+import {fail} from '@sveltejs/kit';
 import bcrypt from 'bcrypt';
-import {
-	email,
-	minLength,
-	nullable,
-	object,
-	safeParse,
-	string,
-	toTrimmed,
-	transform,
-} from 'valibot';
+import {email, minLength, object, safeParse, string, toTrimmed} from 'valibot';
 import type {Actions} from './$types';
 
 export const actions: Actions = {
@@ -17,36 +9,33 @@ export const actions: Actions = {
 		const user = event.locals.user;
 
 		if (!user) {
-			return {
+			return fail(401, {
 				success: false,
 				message: 'Not authorized',
-			};
+			});
 		}
 
 		const form = await event.request.formData();
-		const values = {
+		const parsed = safeParse(schema, {
 			name: form.get('name'),
 			email: form.get('email'),
 			password: form.get('password'),
-		};
-
-		const parsed = safeParse(schema, values);
+		});
 
 		if (!parsed.success) {
-			return {
+			return fail(400, {
 				success: false,
 				message: parsed.issues[0].message,
-				meta: {values},
-			};
+			});
 		}
 
+		const {id} = user;
 		const {name, email, password} = parsed.output;
 
-		if (await prisma.user.exists({email, AND: {id: {not: user.id}}})) {
+		if (email !== user.email && (await prisma.user.exists({email}))) {
 			return {
 				success: false,
 				message: 'Email already in use',
-				meta: {values},
 			};
 		}
 
@@ -54,13 +43,9 @@ export const actions: Actions = {
 			data: {
 				name,
 				email,
-				password: password
-					? await bcrypt.hash(password, await bcrypt.genSalt(8))
-					: undefined,
+				password: await bcrypt.hash(password, await bcrypt.genSalt(8)),
 			},
-			where: {
-				id: user.id,
-			},
+			where: {id},
 		});
 
 		return {
@@ -71,13 +56,7 @@ export const actions: Actions = {
 };
 
 const schema = object({
-	name: transform(nullable(string([toTrimmed(), minLength(4)])), (v) => {
-		return v ? v : undefined;
-	}),
-	email: transform(nullable(string([email()])), (v) => {
-		return v ? v : undefined;
-	}),
-	password: transform(nullable(string([minLength(8)])), (v) => {
-		return v ? v : undefined;
-	}),
+	name: string([toTrimmed(), minLength(4)]),
+	email: string([email()]),
+	password: string([minLength(8)]),
 });

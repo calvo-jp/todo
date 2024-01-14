@@ -1,5 +1,5 @@
 import {prisma} from '$lib/server/prisma';
-import {redirect} from '@sveltejs/kit';
+import {fail, redirect} from '@sveltejs/kit';
 import {minLength, object, safeParse, string, toTrimmed} from 'valibot';
 import type {Actions} from './$types';
 
@@ -8,9 +8,10 @@ export const actions: Actions = {
 		const user = evt.locals.user;
 
 		if (!user) {
-			return {
-				error: 'Not authorized',
-			};
+			return fail(401, {
+				success: false,
+				message: 'Not authorized',
+			});
 		}
 
 		const form = await evt.request.formData();
@@ -22,10 +23,10 @@ export const actions: Actions = {
 		const parsed = safeParse(schema, values);
 
 		if (!parsed.success) {
-			return {
-				error: parsed.issues[0].message,
-				values,
-			};
+			return fail(400, {
+				success: false,
+				message: parsed.issues[0].message,
+			});
 		}
 
 		await prisma.todo.create({
@@ -35,7 +36,7 @@ export const actions: Actions = {
 			},
 		});
 
-		redirect(303, '/');
+		return redirect(303, '/');
 	},
 };
 

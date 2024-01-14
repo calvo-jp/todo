@@ -9,13 +9,13 @@
 	<title>Todos | Login</title>
 </svelte:head>
 
-{#if form?.error}
+{#if form && !form.success}
 	<div
 		role="alert"
 		class="mb-6 flex items-center gap-2 bg-red-100 px-5 py-4 leading-none text-red-500"
 	>
 		<ExclamationCircleIcon class="h-5 w-5" />
-		<p>{form.error}</p>
+		<p>{form.message}</p>
 	</div>
 {/if}
 

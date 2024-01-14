@@ -7,19 +7,16 @@ import type {Actions} from './$types';
 export const actions: Actions = {
 	async default(event) {
 		const form = await event.request.formData();
-
-		const values = {
+		const parsed = safeParse(schema, {
 			name: form.get('name'),
 			email: form.get('email'),
 			password: form.get('password'),
-		};
-
-		const parsed = safeParse(schema, values);
+		});
 
 		if (!parsed.success) {
 			return fail(400, {
-				error: parsed.issues[0].message,
-				values,
+				success: false,
+				message: parsed.issues[0].message,
 			});
 		}
 
@@ -27,8 +24,8 @@ export const actions: Actions = {
 
 		if (await prisma.user.exists({email})) {
 			return fail(400, {
-				error: 'Email already in use',
-				values,
+				success: false,
+				message: 'Email already in use',
 			});
 		}
 

@@ -7,18 +7,15 @@ import type {Actions} from './$types';
 export const actions: Actions = {
 	async default(event) {
 		const form = await event.request.formData();
-
-		const values = {
+		const parsed = safeParse(schema, {
 			email: form.get('email'),
 			password: form.get('password'),
-		};
-
-		const parsed = safeParse(schema, values);
+		});
 
 		if (!parsed.success) {
 			return fail(400, {
-				error: parsed.issues[0].message,
-				values,
+				success: false,
+				message: parsed.issues[0].message,
 			});
 		}
 
@@ -27,8 +24,8 @@ export const actions: Actions = {
 
 		if (!user) {
 			return fail(400, {
-				error: 'Invalid username or password',
-				values,
+				success: false,
+				message: 'Invalid username or password',
 			});
 		}
 
@@ -36,8 +33,8 @@ export const actions: Actions = {
 
 		if (!matches) {
 			return fail(400, {
-				error: 'Invalid username or password',
-				values,
+				success: false,
+				message: 'Invalid username or password',
 			});
 		}
 

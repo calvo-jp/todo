@@ -37,14 +37,14 @@
 			name="name"
 			placeholder="Name"
 			class="block h-12 w-full border border-gray-200 px-4 outline-none placeholder:text-gray-400"
-			value={form?.meta?.values.name ?? data.user?.name}
+			value={data.user?.name}
 		/>
 		<input
 			type="email"
 			name="email"
 			placeholder="Email"
 			class="block h-12 w-full border border-gray-200 px-4 outline-none placeholder:text-gray-400"
-			value={form?.meta?.values.email ?? data.user?.email}
+			value={data.user?.email}
 		/>
 		<input
 			type="password"
