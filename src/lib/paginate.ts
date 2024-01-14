@@ -6,10 +6,8 @@ interface PaginateArgs {
 
 export function paginate({page, size, count}: PaginateArgs) {
 	const totalPages = clamp(Math.ceil(count / size), 1, Infinity);
-
 	const firstPage = page === 1;
 	const lastPage = page === totalPages;
-
 	const pages = Array.from({length: totalPages}).map((_, index) => {
 		const value = index + 1;
 		const selected = page === value;
@@ -20,15 +18,14 @@ export function paginate({page, size, count}: PaginateArgs) {
 		};
 	});
 
-	const nextPage = lastPage ? null : {value: clamp(page + 1, 1, totalPages)};
 	const prevPage = firstPage ? null : {value: page - 1};
+	const nextPage = lastPage ? null : {value: clamp(page + 1, 1, totalPages)};
 
-	const start = size * (page - 1) + 1;
-	const until = clamp(start - 1 + size, 1, count);
-
+	const pageRangeStart = size * (page - 1) + 1;
+	const pageRangeUntil = clamp(pageRangeStart - 1 + size, 1, count);
 	const pageRange = {
-		start,
-		until,
+		start: pageRangeStart,
+		until: pageRangeUntil,
 	};
 
 	return {
