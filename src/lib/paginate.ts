@@ -5,7 +5,7 @@ interface PaginateArgs {
 }
 
 export function paginate({page, size, count}: PaginateArgs) {
-	const totalPages = Math.ceil(count / size);
+	const totalPages = clamp(Math.ceil(count / size), 1, Infinity);
 
 	const firstPage = page === 1;
 	const lastPage = page === totalPages;
@@ -20,7 +20,7 @@ export function paginate({page, size, count}: PaginateArgs) {
 		};
 	});
 
-	const nextPage = lastPage ? null : {value: page + 1};
+	const nextPage = lastPage ? null : {value: clamp(page + 1, 1, totalPages)};
 	const prevPage = firstPage ? null : {value: page - 1};
 
 	const start = size * (page - 1) + 1;
