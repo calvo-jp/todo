@@ -20,7 +20,13 @@ export const actions: Actions = {
 		}
 
 		const {email, password} = parsed.output;
-		const user = await prisma.user.findUnique({where: {email}});
+		const user = await prisma.user.findUnique({
+			where: {email},
+			select: {
+				id: true,
+				password: true,
+			},
+		});
 
 		if (!user) {
 			return fail(400, {
@@ -38,9 +44,7 @@ export const actions: Actions = {
 			});
 		}
 
-		event.locals.user = user;
 		event.cookies.set('user', user.id, {path: '/'});
-
 		redirect(303, '/');
 	},
 };

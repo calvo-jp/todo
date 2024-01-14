@@ -35,11 +35,12 @@ export const actions: Actions = {
 				email,
 				password: await bcrypt.hash(password, await genSalt(8)),
 			},
+			select: {
+				id: true,
+			},
 		});
 
-		event.locals.user = user;
 		event.cookies.set('user', user.id, {path: '/'});
-
 		redirect(303, '/');
 	},
 };

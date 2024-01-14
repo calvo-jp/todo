@@ -46,6 +46,9 @@ export const actions: Actions = {
 				password: await bcrypt.hash(password, await bcrypt.genSalt(8)),
 			},
 			where: {id},
+			select: {
+				id: true,
+			},
 		});
 
 		return {
