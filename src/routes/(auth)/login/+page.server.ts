@@ -2,12 +2,7 @@ import {prisma} from '$lib/server/prisma';
 import {fail, redirect} from '@sveltejs/kit';
 import bcrypt from 'bcrypt';
 import {email, minLength, object, safeParse, string, toTrimmed} from 'valibot';
-import type {PageServerLoad} from '../$types';
 import type {Actions} from './$types';
-
-export const load: PageServerLoad = async (event) => {
-	if (event.locals.user) throw redirect(303, '/');
-};
 
 export const actions: Actions = {
 	async default(event) {

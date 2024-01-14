@@ -1,12 +1,7 @@
 import {prisma} from '$lib/server/prisma';
 import {redirect} from '@sveltejs/kit';
 import {minLength, object, safeParse, string, toTrimmed} from 'valibot';
-import type {PageServerLoad} from '../$types';
 import type {Actions} from './$types';
-
-export const load: PageServerLoad = async (event) => {
-	if (!event.locals.user) throw redirect(303, '/login');
-};
 
 export const actions: Actions = {
 	async default(evt) {

@@ -1,19 +1,20 @@
 import {prisma} from '$lib/server/prisma';
 import type {Prisma} from '@prisma/client';
 import {fail, redirect} from '@sveltejs/kit';
+import invariant from 'tiny-invariant';
 import {nullable, object, parse, string, toTrimmed, transform} from 'valibot';
 import type {Actions, PageServerLoad} from './$types';
 
 export const load: PageServerLoad = async (event) => {
 	const user = event.locals.user;
 
+	invariant(user);
+
 	const {page, size, search} = parse(schema, {
 		page: event.url.searchParams.get('page'),
 		size: event.url.searchParams.get('size'),
 		search: event.url.searchParams.get('search'),
 	});
-
-	if (!user) return redirect(303, '/login');
 
 	const {id} = user;
 
