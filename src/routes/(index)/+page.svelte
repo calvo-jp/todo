@@ -15,6 +15,7 @@
 	import ChevronLeftIcon from '$lib/chevron-left-icon.svelte';
 	import ChevronRightIcon from '$lib/chevron-right-icon.svelte';
 	import {dataAttr} from '$lib/data-attr.js';
+	import Input from '$lib/input.svelte';
 	import {paginate} from '$lib/paginate';
 	import PlusIcon from '$lib/plus-icon.svelte';
 	import SearchIcon from '$lib/search-icon.svelte';
@@ -53,12 +54,12 @@
 			<input type="hidden" name="size" value={data.size} />
 
 			<div class="relative w-full">
-				<input
+				<Input
 					type="search"
 					name="search"
 					value={data.search}
 					placeholder="Search"
-					class="block h-12 w-full appearance-none border border-gray-200 pl-12 pr-4 outline-none placeholder:text-gray-400"
+					class="pl-12"
 				/>
 
 				<SearchIcon
