@@ -78,17 +78,24 @@ export const actions: Actions = {
 
 		if (!event.locals.user) {
 			return fail(401, {
-				error: 'Not authorized',
+				success: false,
+				message: 'Not authorized',
 			});
 		}
 
 		if (!id) {
 			return fail(400, {
-				error: "Missing 'id'",
+				success: false,
+				message: "Missing 'id'",
 			});
 		}
 
 		await prisma.todo.delete({where: {id}});
+
+		return {
+			success: true,
+			message: 'Todo deleted',
+		};
 	},
 	async complete(event) {
 		const form = await event.request.formData();
@@ -96,13 +103,15 @@ export const actions: Actions = {
 
 		if (!event.locals.user) {
 			return fail(401, {
-				error: 'Not authorized',
+				success: false,
+				message: 'Not authorized',
 			});
 		}
 
 		if (!id) {
 			return fail(400, {
-				error: "Missing 'id'",
+				success: false,
+				message: "Missing 'id'",
 			});
 		}
 
@@ -112,5 +121,10 @@ export const actions: Actions = {
 				completedAt: new Date(),
 			},
 		});
+
+		return {
+			success: true,
+			message: 'Todo marked as complete',
+		};
 	},
 };

@@ -15,12 +15,9 @@ export const actions: Actions = {
 		}
 
 		const form = await evt.request.formData();
-
-		const values = {
+		const parsed = safeParse(schema, {
 			name: form.get('name'),
-		};
-
-		const parsed = safeParse(schema, values);
+		});
 
 		if (!parsed.success) {
 			return fail(400, {
@@ -36,7 +33,7 @@ export const actions: Actions = {
 			},
 		});
 
-		return redirect(303, '/');
+		redirect(303, '/');
 	},
 };
 
